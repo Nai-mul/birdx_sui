@@ -1,16 +1,15 @@
 import sys
-
+import time
+import asyncio
+import random
 sys.dont_write_bytecode = True
-
+from random import randint
 from hokireceh_claimer import base
 from core.info import get_info
 from core.task import process_do_task, process_boost_speed
 from core.mint import process_mint_worm
 from core.game import process_break_egg
 from core.upgrade import process_upgrade
-
-import time
-
 
 class Birds:
     def __init__(self):
@@ -45,7 +44,7 @@ class Birds:
             config_file=self.config_file, config_name="auto-upgrade-egg"
         )
 
-    def main(self):
+    async def main(self):  # Make the main function async
         while True:
             base.clear_terminal()
             print(self.banner)
@@ -65,6 +64,9 @@ class Birds:
                     if self.auto_do_task:
                         base.log(f"{base.yellow}Auto Do Task: {base.green}ON")
                         process_do_task(data=data)
+                        wait_time = random.uniform(5, 10)
+                        base.log(f"{base.yellow}Waiting for {wait_time:.2f} seconds before next task...")
+                        await asyncio.sleep(wait_time)
                     else:
                         base.log(f"{base.yellow}Auto Do Task: {base.red}OFF")
 
@@ -72,6 +74,10 @@ class Birds:
                     if self.auto_boost_speed:
                         base.log(f"{base.yellow}Auto Boost Speed: {base.green}ON")
                         process_boost_speed(data=data)
+                        wait_time = random.uniform(5, 10)
+                        base.log(f"{base.yellow}Waiting for {wait_time:.2f} seconds before next task...")
+                        await asyncio.sleep(wait_time)
+                        
                     else:
                         base.log(f"{base.yellow}Auto Boost Speed: {base.red}OFF")
 
@@ -79,6 +85,9 @@ class Birds:
                     if self.auto_mint_worm:
                         base.log(f"{base.yellow}Auto Mint Worm: {base.green}ON")
                         process_mint_worm(data=data)
+                        wait_time = random.uniform(5, 10)
+                        base.log(f"{base.yellow}Waiting for {wait_time:.2f} seconds before next task...")
+                        await asyncio.sleep(wait_time)
                     else:
                         base.log(f"{base.yellow}Auto Mint Worm: {base.red}OFF")
 
@@ -86,6 +95,9 @@ class Birds:
                     if self.auto_break_egg:
                         base.log(f"{base.yellow}Auto Break Egg: {base.green}ON")
                         process_break_egg(data=data)
+                        wait_time = random.uniform(5, 10)
+                        base.log(f"{base.yellow}Waiting for {wait_time:.2f} seconds before next task...")
+                        await asyncio.sleep(wait_time)
                     else:
                         base.log(f"{base.yellow}Auto Break Egg: {base.red}OFF")
 
@@ -93,6 +105,9 @@ class Birds:
                     if self.auto_upgrade_egg:
                         base.log(f"{base.yellow}Auto Upgrade Egg: {base.green}ON")
                         process_upgrade(data=data)
+                        wait_time = random.uniform(5, 10)
+                        base.log(f"{base.yellow}Waiting for {wait_time:.2f} seconds before next task...")
+                        await asyncio.sleep(wait_time)
                     else:
                         base.log(f"{base.yellow}Auto Upgrade Egg: {base.red}OFF")
 
@@ -102,14 +117,13 @@ class Birds:
                     base.log(f"{base.red}Error: {base.white}{e}")
 
             print()
-            wait_time = 60 * 60
+            wait_time = randint(3600, 7200)
             base.log(f"{base.yellow}Wait for {int(wait_time/60)} minutes!")
-            time.sleep(wait_time)
-
+            await asyncio.sleep(wait_time) 
 
 if __name__ == "__main__":
     try:
         birds = Birds()
-        birds.main()
+        asyncio.run(birds.main()) 
     except KeyboardInterrupt:
         sys.exit()
